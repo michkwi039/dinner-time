@@ -3,7 +3,7 @@ package pl.polsl.dinnertime.security.jwt;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.polsl.dinnertime.user.model.User;
+import pl.polsl.dinnertime.user.model.entity.User;
 
 import java.util.ArrayList;
 import java.util.Collection;

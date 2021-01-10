@@ -1,7 +1,7 @@
-package pl.polsl.dinnertime.user.model;
+package pl.polsl.dinnertime.user.model.entity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.polsl.dinnertime.user.model.User;
+import pl.polsl.dinnertime.user.model.entity.User;
 
 import java.util.Optional;
 

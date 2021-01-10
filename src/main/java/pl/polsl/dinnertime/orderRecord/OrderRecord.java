@@ -1,7 +1,7 @@
 package pl.polsl.dinnertime.orderRecord;
 
 import lombok.Data;
-import pl.polsl.dinnertime.user.model.User;
+import pl.polsl.dinnertime.user.model.entity.User;
 
 import javax.persistence.*;
 

@@ -4,8 +4,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pl.polsl.dinnertime.user.model.User;
-import pl.polsl.dinnertime.user.model.UserRepository;
+import pl.polsl.dinnertime.user.model.entity.User;
+import pl.polsl.dinnertime.user.model.entity.UserRepository;
 
 import java.util.Optional;
 
