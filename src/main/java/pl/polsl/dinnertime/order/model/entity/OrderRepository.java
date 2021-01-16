@@ -1,6 +1,7 @@
-package pl.polsl.dinnertime.order.model;
+package pl.polsl.dinnertime.order.model.entity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import pl.polsl.dinnertime.order.model.entity.Order;
 
 import java.time.ZonedDateTime;
 import java.util.List;
