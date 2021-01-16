@@ -4,10 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.polsl.dinnertime.order.model.entity.Order;
+import pl.polsl.dinnertime.order.model.dto.NewOrderRequest;
+import pl.polsl.dinnertime.order.model.dto.OrderInfo;
 import pl.polsl.dinnertime.order.service.OrderService;
 
+import java.util.stream.Collectors;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -21,9 +25,15 @@ public class OrderController {
     }
 
     @GetMapping("orders")
-    public ResponseEntity<List<Order>> getCurrentOrders() {
-        List<Order> currentOrders = orderService.getCurrentOrders();
-        return ResponseEntity.ok(currentOrders);
+    public ResponseEntity<List<OrderInfo>> getCurrentOrders() {
+        return ResponseEntity.ok(orderService.getCurrentOrders());
     }
+
+    @PostMapping("createOrder")
+    public void createOrder(@RequestBody NewOrderRequest newOrderRequest) {
+        orderService.createOrder(newOrderRequest);
+    }
+
+
 
 }

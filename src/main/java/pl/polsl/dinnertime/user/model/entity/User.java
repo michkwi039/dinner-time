@@ -3,7 +3,7 @@ package pl.polsl.dinnertime.user.model.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pl.polsl.dinnertime.order.model.entity.Order;
-import pl.polsl.dinnertime.orderRecord.OrderRecord;
+import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecord;
 
 import javax.persistence.*;
 import java.util.Set;
