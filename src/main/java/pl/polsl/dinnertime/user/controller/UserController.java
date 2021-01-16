@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.polsl.dinnertime.exceptions.PasswordNotMatchException;
 import pl.polsl.dinnertime.exceptions.PasswordRulesNotMatchException;
 import pl.polsl.dinnertime.user.model.dto.SimpleUser;
 import pl.polsl.dinnertime.user.model.dto.UserAccount;
@@ -43,6 +44,15 @@ public class UserController {
         userService.activateUser(token);
     }
 
+    @PostMapping("changePassword")
+    public void changePassword(@RequestParam String oldPassword, @RequestParam String newPassword)
+            throws PasswordNotMatchException, PasswordRulesNotMatchException {
+        userService.changePassword(oldPassword, newPassword);
+    }
 
+    @PostMapping("deleteUser")
+    public void deleteUser(@RequestParam Long id) {
+        userService.deleteUser(id);
+    }
 
 }
