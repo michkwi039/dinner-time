@@ -1,4 +1,4 @@
-package pl.polsl.dinnertime.order.model;
+package pl.polsl.dinnertime.order.model.entity;
 
 import lombok.Data;
 import pl.polsl.dinnertime.user.model.entity.User;

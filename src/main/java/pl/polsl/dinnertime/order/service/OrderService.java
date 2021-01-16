@@ -1,8 +1,8 @@
 package pl.polsl.dinnertime.order.service;
 
 import org.springframework.stereotype.Service;
-import pl.polsl.dinnertime.order.model.Order;
-import pl.polsl.dinnertime.order.model.OrderRepository;
+import pl.polsl.dinnertime.order.model.entity.Order;
+import pl.polsl.dinnertime.order.model.entity.OrderRepository;
 
 import java.time.ZonedDateTime;
 import java.util.List;

@@ -2,7 +2,7 @@ package pl.polsl.dinnertime.user.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pl.polsl.dinnertime.order.model.Order;
+import pl.polsl.dinnertime.order.model.entity.Order;
 import pl.polsl.dinnertime.orderRecord.OrderRecord;
 
 import javax.persistence.*;

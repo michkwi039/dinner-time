@@ -1,7 +1,12 @@
 package pl.polsl.dinnertime.user.service;
 
+import org.passay.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.polsl.dinnertime.exceptions.PasswordNotMatchException;
+import pl.polsl.dinnertime.exceptions.PasswordRulesNotMatchException;
 import pl.polsl.dinnertime.exceptions.TokenExpiredException;
 import pl.polsl.dinnertime.user.model.dto.SimpleUser;
 import pl.polsl.dinnertime.user.model.dto.UserAccount;
@@ -14,9 +19,10 @@ import pl.polsl.dinnertime.verificationToken.model.VerificationTokenRepository;
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -33,9 +39,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User addUser(UserAccount userAccount) {
+    public User addUser(UserAccount userAccount) throws PasswordRulesNotMatchException {
         User newUser = new User();
         newUser.setUsername(userAccount.getUsername());
+        validatePassword(userAccount.getPassword());
         newUser.setPassword(passwordEncoder.encode(userAccount.getPassword()));
         newUser.setName(userAccount.getName());
         newUser.setLastname(userAccount.getLastname());
@@ -44,6 +51,31 @@ public class UserService {
         newUser.setRole(Role.USER);
         userRepository.save(newUser);
         return newUser;
+    }
+
+    private void validatePassword(String password) throws PasswordRulesNotMatchException {
+        List<CharacterRule> rules = getPasswordRules();
+        PasswordValidator passwordValidator = new PasswordValidator(rules);
+        RuleResult result = passwordValidator.validate(new PasswordData(password));
+        if (!result.isValid()) {
+            throw new PasswordRulesNotMatchException(passwordValidator.getMessages(result));
+        }
+    }
+
+    private List<CharacterRule> getPasswordRules() {
+        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+        lowerCaseRule.setNumberOfCharacters(3);
+
+        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        upperCaseRule.setNumberOfCharacters(1);
+
+        CharacterData digitChars = EnglishCharacterData.Digit;
+        CharacterRule digitRule = new CharacterRule(digitChars);
+        digitRule.setNumberOfCharacters(2);
+
+        return Arrays.asList(lowerCaseRule, upperCaseRule, digitRule);
     }
 
     public VerificationToken createVerificationToken(User user, String token) {
@@ -77,4 +109,6 @@ public class UserService {
                 .sorted(Comparator.comparing(SimpleUser::getUsername))
                 .collect(Collectors.toList());
     }
+
+
 }

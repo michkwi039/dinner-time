@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.polsl.dinnertime.exceptions.PasswordRulesNotMatchException;
 import pl.polsl.dinnertime.user.model.dto.SimpleUser;
 import pl.polsl.dinnertime.user.model.dto.UserAccount;
 import pl.polsl.dinnertime.user.model.entity.User;
@@ -32,14 +33,16 @@ public class UserController {
     }
 
     @PostMapping("addUser")
-    public void addUser(@RequestBody UserAccount userAccount, HttpServletRequest request) {
+    public void addUser(@RequestBody UserAccount userAccount, HttpServletRequest request) throws PasswordRulesNotMatchException {
         User user = userService.addUser(userAccount);
         applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(request.getRequestURL().toString(), user));
     }
 
-    @PostMapping("/addUser/registrationConfirm")
+    @PostMapping("addUser/registrationConfirm")
     public void confirmRegistration(@RequestParam String token) {
         userService.activateUser(token);
     }
+
+
 
 }

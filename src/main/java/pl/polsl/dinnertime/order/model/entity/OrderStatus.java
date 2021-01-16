@@ -1,4 +1,4 @@
-package pl.polsl.dinnertime.order.model;
+package pl.polsl.dinnertime.order.model.entity;
 
 public enum OrderStatus {
 
