@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.polsl.dinnertime.exceptions.PasswordNotMatchException;
 import pl.polsl.dinnertime.exceptions.PasswordRulesNotMatchException;
 import pl.polsl.dinnertime.exceptions.TokenExpiredException;
+import pl.polsl.dinnertime.exceptions.UserNotFoundException;
 import pl.polsl.dinnertime.user.model.dto.SimpleUser;
 import pl.polsl.dinnertime.user.model.dto.UserAccount;
 import pl.polsl.dinnertime.user.model.entity.Role;
@@ -19,7 +20,6 @@ import pl.polsl.dinnertime.verificationToken.model.VerificationTokenRepository;
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -97,7 +97,7 @@ public class UserService {
     private VerificationToken getVerificationToken(String token) throws TokenExpiredException {
         VerificationToken verificationToken = verificationTokenRepository.getByToken(token);
         if (verificationToken.getExpiryDate().isBefore(ZonedDateTime.now().minusHours(72))) {
-            throw new TokenExpiredException("Token is expired.");
+            throw new TokenExpiredException();
         }
         return verificationToken;
     }
@@ -110,5 +110,32 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchException, PasswordRulesNotMatchException {
+        User user = authenticateUser();
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            validatePassword(newPassword);
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        } else {
+            throw new PasswordNotMatchException();
+        }
+    }
+
+    public User authenticateUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        return userRepository.getUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException());
+    }
+
+    public void deleteUser(Long id) {
+        User user = userRepository.getOne(id);
+        user.setStatus(Status.INACTIVE);
+        user.setName("unknown");
+        user.setLastname("unknown");
+        user.setEmail("unknown");
+        user.setUsername(user.getId().toString());
+        userRepository.save(user);
+    }
 
 }
