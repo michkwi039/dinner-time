@@ -2,10 +2,15 @@ package pl.polsl.dinnertime.orderRecord.service;
 
 import org.springframework.stereotype.Service;
 import pl.polsl.dinnertime.order.service.OrderService;
+import pl.polsl.dinnertime.orderRecord.model.dto.OrderRecordInfo;
 import pl.polsl.dinnertime.orderRecord.model.dto.OrderRecordRequest;
 import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecord;
 import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecordRepository;
 import pl.polsl.dinnertime.user.service.UserService;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderRecordService {
@@ -26,5 +31,12 @@ public class OrderRecordService {
         orderRecord.setUser(userService.authenticateUser());
         orderRecord.setOrder(orderService.getOrderById(orderRecordRequest.getOrderId()));
         orderRecordRepository.save(orderRecord);
+    }
+
+    public List<OrderRecordInfo> getOrderRecordsForOrder(Long id) {
+        return orderRecordRepository.getAllByOrder_Id(id)
+                .stream()
+                .map(OrderRecordInfo::new)
+                .collect(Collectors.toList());
     }
 }

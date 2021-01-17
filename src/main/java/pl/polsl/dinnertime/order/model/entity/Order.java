@@ -7,6 +7,7 @@ import pl.polsl.dinnertime.user.model.entity.User;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,5 +46,11 @@ public class Order {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "orderRecordId")
     private List<OrderRecord> orderRecord;
+
+    public void addUser(User user) {
+        Set<User> users = getUsers();
+        users.add(user);
+        setUsers(users);
+    }
 
 }

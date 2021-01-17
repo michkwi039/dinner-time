@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -22,12 +23,10 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserService userService;
-    private final UserRepository userRepository;
 
     public OrderService(OrderRepository orderRepository, UserService userService, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     public List<OrderInfo> getCurrentOrders() {
@@ -51,5 +50,12 @@ public class OrderService {
 
     public Order getOrderById(Long orderId) {
         return orderRepository.getOne(orderId);
+    }
+
+    public void joinToOrder(Long orderId) {
+        Order order = orderRepository.getOne(orderId);
+        User user = userService.authenticateUser();
+        order.addUser(user);
+        orderRepository.save(order);
     }
 }

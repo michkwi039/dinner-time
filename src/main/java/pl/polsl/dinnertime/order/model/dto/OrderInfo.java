@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 public class OrderInfo {
 
+    private Long id;
+
     private String restaurant;
 
     private String collectingPlace;
@@ -25,6 +27,7 @@ public class OrderInfo {
     private List<OrderRecord> orderRecord;
 
     public OrderInfo(Order order) {
+        this.id = order.getId();
         this.restaurant = order.getRestaurant();
         this.collectingPlace = order.getCollectingPlace();
         this.orderingTime = order.getOrderingTime();
