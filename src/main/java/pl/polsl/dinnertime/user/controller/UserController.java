@@ -27,30 +27,30 @@ public class UserController {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    @GetMapping("users")
+    @GetMapping("user")
     public ResponseEntity<List<SimpleUser>> getUsersList() {
         List<SimpleUser> users = userService.getUsers();
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("addUser")
+    @PostMapping("user")
     public void addUser(@RequestBody UserAccount userAccount, HttpServletRequest request) throws PasswordRulesNotMatchException {
         User user = userService.addUser(userAccount);
         applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(request.getRequestURL().toString(), user));
     }
 
-    @PostMapping("addUser/registrationConfirm")
+    @PostMapping("user/registrationConfirm")
     public void confirmRegistration(@RequestParam String token) {
         userService.activateUser(token);
     }
 
-    @PostMapping("changePassword")
+    @PostMapping("user/changePassword")
     public void changePassword(@RequestParam String oldPassword, @RequestParam String newPassword)
             throws PasswordNotMatchException, PasswordRulesNotMatchException {
         userService.changePassword(oldPassword, newPassword);
     }
 
-    @PostMapping("deleteUser")
+    @DeleteMapping("user")
     public void deleteUser(@RequestParam Long id) {
         userService.deleteUser(id);
     }

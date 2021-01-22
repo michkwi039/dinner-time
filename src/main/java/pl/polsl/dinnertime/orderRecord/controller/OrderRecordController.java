@@ -20,12 +20,12 @@ public class OrderRecordController {
         this.orderRecordService = orderRecordService;
     }
 
-    @PostMapping("createOrderRecord")
+    @PostMapping("orderRecords")
     public void createOrderRecord(@RequestBody OrderRecordRequest orderRecordRequest){
         orderRecordService.createOrderRecord(orderRecordRequest);
     }
 
-    @GetMapping("getOrderRecordsForOrder")
+    @GetMapping("orderRecords")
     public ResponseEntity<List<OrderRecordInfo>> getOrderRecordsForOrder(@RequestParam Long id) {
         return ResponseEntity.ok(orderRecordService.getOrderRecordsForOrder(id));
     }

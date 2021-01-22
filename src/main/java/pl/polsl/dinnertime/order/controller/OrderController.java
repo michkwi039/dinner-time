@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.polsl.dinnertime.order.model.dto.NewOrderRequest;
 import pl.polsl.dinnertime.order.model.dto.OrderInfo;
 import pl.polsl.dinnertime.order.service.OrderService;
+import pl.polsl.dinnertime.orderRecord.model.dto.OrderRecordRequest;
+import pl.polsl.dinnertime.orderRecord.service.OrderRecordService;
 
 import java.util.stream.Collectors;
 import java.util.Comparator;
@@ -15,10 +17,12 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderRecordService orderRecordService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService,OrderRecordService orderRecordService) {
         this.orderService = orderService;
+        this.orderRecordService=orderRecordService;
     }
 
     @GetMapping("orders")
@@ -26,9 +30,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getCurrentOrders());
     }
 
-    @PostMapping("createOrder")
-    public void createOrder(@RequestBody NewOrderRequest newOrderRequest) {
+    @PostMapping("orders")
+    public void createOrder(@RequestBody NewOrderRequest newOrderRequest,@RequestBody OrderRecordRequest orderRecordRequest) {
         orderService.createOrder(newOrderRequest);
+        orderRecordService.createOrderRecord(orderRecordRequest);
     }
 
     @PostMapping("joinToOrder")
