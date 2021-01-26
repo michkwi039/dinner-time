@@ -7,6 +7,7 @@ import pl.polsl.dinnertime.user.model.entity.User;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +52,14 @@ public class Order {
         Set<User> users = getUsers();
         users.add(user);
         setUsers(users);
+    }
+    public void addOrderRecord(OrderRecord orderRecord){
+        if(this.orderRecord!=null) {
+            this.orderRecord.add(orderRecord);
+        }else{
+            this.orderRecord=new ArrayList<>();
+            this.orderRecord.add(orderRecord);
+        }
     }
 
 }

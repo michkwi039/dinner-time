@@ -5,8 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.polsl.dinnertime.order.model.dto.NewOrderRequest;
 import pl.polsl.dinnertime.order.model.dto.OrderInfo;
+import pl.polsl.dinnertime.order.model.entity.Order;
 import pl.polsl.dinnertime.order.service.OrderService;
 import pl.polsl.dinnertime.orderRecord.model.dto.OrderRecordRequest;
+import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecord;
 import pl.polsl.dinnertime.orderRecord.service.OrderRecordService;
 
 import java.util.stream.Collectors;
@@ -32,8 +34,11 @@ public class OrderController {
 
     @PostMapping("orders")
     public void createOrder(@RequestBody NewOrderRequest newOrderRequest,@RequestBody OrderRecordRequest orderRecordRequest) {
-        orderService.createOrder(newOrderRequest);
-        orderRecordService.createOrderRecord(orderRecordRequest);
+        Order order =orderService.createOrder(newOrderRequest);
+        orderRecordRequest.setOrderId(order.getId());
+        OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
+//        order.addOrderRecord(orderRecord);
+//        orderService.updateOrder(order);
     }
 
     @PostMapping("joinToOrder")

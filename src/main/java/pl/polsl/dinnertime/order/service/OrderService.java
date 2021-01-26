@@ -10,6 +10,7 @@ import pl.polsl.dinnertime.user.model.entity.User;
 import pl.polsl.dinnertime.user.model.entity.UserRepository;
 import pl.polsl.dinnertime.user.service.UserService;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
@@ -37,7 +38,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public void createOrder(NewOrderRequest newOrderRequest) {
+    public Order createOrder(NewOrderRequest newOrderRequest) {
         Order order = new Order();
         order.setOrderingTime(newOrderRequest.getTime());
         order.setRestaurant(newOrderRequest.getRestaurant());
@@ -45,6 +46,9 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.OPEN);
         User user = userService.authenticateUser();
         order.setOrderingUser(user);
+        return orderRepository.save(order);
+    }
+    public void updateOrder(Order order){
         orderRepository.save(order);
     }
 

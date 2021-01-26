@@ -24,13 +24,13 @@ public class OrderRecordService {
         this.orderService = orderService;
     }
 
-    public void createOrderRecord(OrderRecordRequest orderRecordRequest){
+    public OrderRecord createOrderRecord(OrderRecordRequest orderRecordRequest){
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setMenuPositions(orderRecordRequest.getMenuPositions());
         orderRecord.setPrice(orderRecordRequest.getPrice());
         orderRecord.setUser(userService.authenticateUser());
         orderRecord.setOrder(orderService.getOrderById(orderRecordRequest.getOrderId()));
-        orderRecordRepository.save(orderRecord);
+        return orderRecordRepository.save(orderRecord);
     }
 
     public List<OrderRecordInfo> getOrderRecordsForOrder(Long id) {
