@@ -1,6 +1,8 @@
 package pl.polsl.dinnertime.order.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import pl.polsl.dinnertime.exceptions.UserNotFoundException;
 import pl.polsl.dinnertime.order.model.dto.NewOrderRequest;
 import pl.polsl.dinnertime.order.model.dto.OrderInfo;
 import pl.polsl.dinnertime.order.model.entity.Order;
@@ -24,10 +26,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public OrderService(OrderRepository orderRepository, UserService userService, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
+        this.userRepository=userRepository;
     }
 
     public List<OrderInfo> getCurrentOrders() {
@@ -45,6 +49,8 @@ public class OrderService {
         order.setCollectingPlace(newOrderRequest.getCollectingPlace());
         order.setOrderStatus(OrderStatus.OPEN);
         User user = userService.authenticateUser();
+//        User user=userRepository.getUserByUsername("admin")
+//                .orElseThrow(() -> new UserNotFoundException());
         order.setOrderingUser(user);
         return orderRepository.save(order);
     }
@@ -56,7 +62,7 @@ public class OrderService {
         return orderRepository.getOne(orderId);
     }
 
-    public void joinToOrder(Long orderId) {
+    public void joinToOrder(Long orderId, String menuPositions,Double price) {
         Order order = orderRepository.getOne(orderId);
         User user = userService.authenticateUser();
         order.addUser(user);

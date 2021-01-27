@@ -11,11 +11,13 @@ public class NewOrderRequest {
     private String restaurant;
     private ZonedDateTime time;
     private String collectingPlace;
+    private String menuPositions;
+    private Double price;
 
     public NewOrderRequest() {
     }
 
-    public NewOrderRequest(String restaurant, ZonedDateTime time, String collectingPlace) {
+    public NewOrderRequest(String restaurant, ZonedDateTime time, String collectingPlace,String menuPositions, Double price) {
         this.restaurant = restaurant;
         this.time = time;
         this.collectingPlace = collectingPlace;
