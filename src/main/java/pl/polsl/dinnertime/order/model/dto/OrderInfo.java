@@ -8,6 +8,7 @@ import pl.polsl.dinnertime.user.model.dto.SimpleUser;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class OrderInfo {
@@ -24,10 +25,10 @@ public class OrderInfo {
 
     private SimpleUser orderingUser;
 
-    private List<OrderRecord> orderRecord;
+    private Set<OrderRecord> orderRecord;
 
     public OrderInfo(Order order) {
-        this.id = order.getId();
+        this.id = order.getOrderId();
         this.restaurant = order.getRestaurant();
         this.collectingPlace = order.getCollectingPlace();
         this.orderingTime = order.getOrderingTime();

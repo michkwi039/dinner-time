@@ -21,5 +21,7 @@ public class NewOrderRequest {
         this.restaurant = restaurant;
         this.time = time;
         this.collectingPlace = collectingPlace;
+        this.menuPositions=menuPositions;
+        this.price=price;
     }
 }

@@ -31,15 +31,16 @@ public class OrderController {
 
     @GetMapping("orders")
     public ResponseEntity<List<OrderInfo>> getCurrentOrders() {
+//        List<Order> orderInfos=orderService.getCurrentOrders();
         return ResponseEntity.ok(orderService.getCurrentOrders());
     }
 
     @PostMapping("orders")
     public void createOrder(@RequestBody NewOrderRequest newOrderRequest) {
         Order order =orderService.createOrder(newOrderRequest);
-        OrderRecordRequest orderRecordRequest= new OrderRecordRequest(newOrderRequest.getMenuPositions(),newOrderRequest.getPrice(),order.getId());
-        //orderRecordRequest.setOrderId(order.getId());
-        OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
+//        OrderRecordRequest orderRecordRequest= new OrderRecordRequest(newOrderRequest.getMenuPositions(),newOrderRequest.getPrice(),order.getOrderId());
+//        //orderRecordRequest.setOrderId(order.getId());
+//        OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
 //        order.addOrderRecord(orderRecord);
 //        orderService.updateOrder(order);
     }
@@ -49,7 +50,12 @@ public class OrderController {
         a.setTime(ZonedDateTime.now());
         a.setRestaurant("piwniczka");
         a.setCollectingPlace("dom");
+        a.setMenuPositions("aaaaaa");
+        a.setPrice(12.0);
         Order order =orderService.createOrder(a);
+        OrderRecordRequest orderRecordRequest= new OrderRecordRequest(a.getMenuPositions(),a.getPrice(),order.getOrderId());
+        //orderRecordRequest.setOrderId(order.getId());
+        //OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
 //        orderRecordRequest.setOrderId(order.getId());
 //        OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
 //        order.addOrderRecord(orderRecord);

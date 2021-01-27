@@ -8,6 +8,10 @@ import pl.polsl.dinnertime.order.model.dto.OrderInfo;
 import pl.polsl.dinnertime.order.model.entity.Order;
 import pl.polsl.dinnertime.order.model.entity.OrderRepository;
 import pl.polsl.dinnertime.order.model.entity.OrderStatus;
+import pl.polsl.dinnertime.orderRecord.model.dto.OrderRecordRequest;
+import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecord;
+import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecordRepository;
+import pl.polsl.dinnertime.orderRecord.service.OrderRecordService;
 import pl.polsl.dinnertime.user.model.entity.User;
 import pl.polsl.dinnertime.user.model.entity.UserRepository;
 import pl.polsl.dinnertime.user.service.UserService;
@@ -16,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,21 +32,33 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final OrderRecordRepository orderRecordRepository;
 
-    public OrderService(OrderRepository orderRepository, UserService userService, UserRepository userRepository) {
+    public OrderService(OrderRepository orderRepository, UserService userService, UserRepository userRepository,OrderRecordRepository orderRecordRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.userRepository=userRepository;
+        this.orderRecordRepository=orderRecordRepository;
     }
 
     public List<OrderInfo> getCurrentOrders() {
-        return orderRepository.getOrderByOrderingTimeAfter(ZonedDateTime.now())
-                .stream()
+//        orderRepository.findAll();
+        List<Order> orderInfos=orderRepository.getOrderByOrderingTimeAfter(ZonedDateTime.now());
+
+        for (Order o:
+             orderInfos) {
+            o.setOrderRecord(getOrderRecordsForOrder(o));
+        }
+        return orderInfos.stream()
                 .map(OrderInfo::new)
                 .sorted(Comparator.comparing(OrderInfo::getOrderingTime))
                 .collect(Collectors.toList());
     }
-
+    public Set<OrderRecord> getOrderRecordsForOrder(Order order){
+        order.setOrderRecord(new HashSet<>(orderRecordRepository.findAllByOrder(order)));
+        return order.getOrderRecord();
+    }
+    @org.springframework.transaction.annotation.Transactional
     public Order createOrder(NewOrderRequest newOrderRequest) {
         Order order = new Order();
         order.setOrderingTime(newOrderRequest.getTime());
@@ -52,7 +69,28 @@ public class OrderService {
 //        User user=userRepository.getUserByUsername("admin")
 //                .orElseThrow(() -> new UserNotFoundException());
         order.setOrderingUser(user);
-        return orderRepository.save(order);
+        order=orderRepository.save(order);
+        OrderRecordRequest orderRecordRequest= new OrderRecordRequest(newOrderRequest.getMenuPositions(),newOrderRequest.getPrice(),order.getOrderId());
+//        order=orderRepository.save(order);
+//        OrderRecordRequest orderRecordRequest= new OrderRecordRequest(newOrderRequest.getMenuPositions(),newOrderRequest.getPrice(),order.getId());
+//        orderRecordRequest.setOrderId(order.getId());
+        OrderRecord orderRecord=createOrderRecord(orderRecordRequest);
+//        order.addOrderRecord(orderRecord);
+//        orderRecord.setOrder(order);
+//        orderRecordRepository.save(orderRecord);
+        order=orderRepository.getOne(order.getOrderId());
+        order.setOrderRecord(new HashSet<>(orderRecordRepository.findAllByOrder(order)));
+        return order;
+    }
+    public OrderRecord createOrderRecord(OrderRecordRequest orderRecordRequest){
+        OrderRecord orderRecord = new OrderRecord();
+        orderRecord.setMenuPositions(orderRecordRequest.getMenuPositions());
+        orderRecord.setPrice(orderRecordRequest.getPrice());
+        orderRecord.setUser(userService.authenticateUser());
+//        orderRecord.setUser(userRepository.getUserByUsername("admin")
+//                .orElseThrow(() -> new UserNotFoundException()));
+        orderRecord.setOrder(getOrderById(orderRecordRequest.getOrderId()));
+        return orderRecordRepository.save(orderRecord);
     }
     public void updateOrder(Order order){
         orderRepository.save(order);

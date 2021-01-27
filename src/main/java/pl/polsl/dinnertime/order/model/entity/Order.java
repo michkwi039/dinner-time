@@ -2,6 +2,7 @@ package pl.polsl.dinnertime.order.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecord;
 import pl.polsl.dinnertime.user.model.entity.User;
 
@@ -14,11 +15,12 @@ import java.util.Set;
 
 @Entity(name = "order_table")
 @Data
-@EqualsAndHashCode(of = "id")
+@ToString(of ="orderId")
+@EqualsAndHashCode(of = "orderId")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long orderId;
 
     @Column
     private String restaurant;
@@ -43,23 +45,23 @@ public class Order {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ordererId", nullable = false)
     private User orderingUser;
+//    @OneToMany(targetEntity=User.class, mappedBy="userRole",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "orderRecordId")
-    private List<OrderRecord> orderRecord;
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<OrderRecord> orderRecord;
 
     public void addUser(User user) {
         Set<User> users = getUsers();
         users.add(user);
         setUsers(users);
     }
-    public void addOrderRecord(OrderRecord orderRecord){
-        if(this.orderRecord!=null) {
-            this.orderRecord.add(orderRecord);
-        }else{
-            this.orderRecord=new ArrayList<>();
-            this.orderRecord.add(orderRecord);
-        }
-    }
+//    public void addOrderRecord(OrderRecord orderRecord){
+//        if(this.orderRecord!=null) {
+//            this.orderRecord.add(orderRecord);
+//        }else{
+//            this.orderRecord=new ArrayList<>();
+//            this.orderRecord.add(orderRecord);
+//        }
+//    }
 
 }
