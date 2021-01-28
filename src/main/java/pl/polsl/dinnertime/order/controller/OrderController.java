@@ -47,11 +47,12 @@ public class OrderController {
     @GetMapping("test")
     public void createOrderTest() {
         NewOrderRequest a=new NewOrderRequest();
-        a.setTime(ZonedDateTime.now());
+        a.setTime(ZonedDateTime.now().plusDays(1));
         a.setRestaurant("piwniczka");
         a.setCollectingPlace("dom");
         a.setMenuPositions("aaaaaa");
         a.setPrice(12.0);
+        a.setCoupon(false);
         Order order =orderService.createOrder(a);
         OrderRecordRequest orderRecordRequest= new OrderRecordRequest(a.getMenuPositions(),a.getPrice(),order.getOrderId());
         //orderRecordRequest.setOrderId(order.getId());
@@ -63,10 +64,18 @@ public class OrderController {
     }
 
     @PostMapping("joinToOrder")
-    public void jointToOrder(@RequestParam Long orderId,@RequestParam String menuPositions,@RequestParam Double price) {
-        orderService.joinToOrder(orderId,menuPositions,price);
-        OrderRecordRequest orderRecordRequest= new OrderRecordRequest(menuPositions,price,orderId);
-        OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
+    public void jointToOrder(@RequestParam Long orderId,@RequestParam String menuPositions,@RequestParam Double price,@RequestParam(required = false)Boolean coupon) {
+
+        if(coupon!=null&&coupon==true){
+            if(!orderService.takeOverOrder(orderId))
+                return;
+            OrderRecordRequest orderRecordRequest= new OrderRecordRequest(menuPositions,price,orderId);
+            OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
+        }else{
+            orderService.joinToOrder(orderId);
+            OrderRecordRequest orderRecordRequest= new OrderRecordRequest(menuPositions,price,orderId);
+            OrderRecord orderRecord=orderRecordService.createOrderRecord(orderRecordRequest);
+        }
     }
 
 }

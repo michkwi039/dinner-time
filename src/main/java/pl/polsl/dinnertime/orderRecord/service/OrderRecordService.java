@@ -33,7 +33,7 @@ public class OrderRecordService {
         orderRecord.setMenuPositions(orderRecordRequest.getMenuPositions());
         orderRecord.setPrice(orderRecordRequest.getPrice());
         orderRecord.setUser(userService.authenticateUser());
-//        orderRecord.setUser(userRepository.getUserByUsername("admin")
+//        orderRecord.setUser(userRepository.getUserByUsername("samolot")
 //                .orElseThrow(() -> new UserNotFoundException()));
         orderRecord.setOrder(orderService.getOrderById(orderRecordRequest.getOrderId()));
         return orderRecordRepository.save(orderRecord);

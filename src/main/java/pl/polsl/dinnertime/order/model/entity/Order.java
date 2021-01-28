@@ -29,6 +29,9 @@ public class Order {
     private String collectingPlace;
 
     @Column
+    private Boolean coupon;
+
+    @Column
     private ZonedDateTime orderingTime;
 
     @Column

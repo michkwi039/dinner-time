@@ -1,8 +1,10 @@
 package pl.polsl.dinnertime.order.model.dto;
 
 import lombok.Data;
+import lombok.ToString;
 import pl.polsl.dinnertime.order.model.entity.Order;
 import pl.polsl.dinnertime.order.model.entity.OrderStatus;
+import pl.polsl.dinnertime.orderRecord.model.dto.OrderRecordInfo;
 import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecord;
 import pl.polsl.dinnertime.user.model.dto.SimpleUser;
 
@@ -25,7 +27,9 @@ public class OrderInfo {
 
     private SimpleUser orderingUser;
 
-    private Set<OrderRecord> orderRecord;
+    private Boolean coupon;
+
+    private Set<OrderRecordInfo> orderRecord;
 
     public OrderInfo(Order order) {
         this.id = order.getOrderId();
@@ -34,6 +38,7 @@ public class OrderInfo {
         this.orderingTime = order.getOrderingTime();
         this.orderStatus = order.getOrderStatus();
         this.orderingUser = new SimpleUser(order.getOrderingUser());
-        this.orderRecord = order.getOrderRecord();
+        this.orderRecord = null;
+        this.coupon=order.getCoupon();
     }
 }

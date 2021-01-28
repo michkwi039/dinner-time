@@ -31,6 +31,15 @@ public class DBInit implements CommandLineRunner {
         mentor.setLastname("Suwaj");
         mentor.setPassword(passwordEncoder.encode("admin"));
         userRepository.save(mentor);
+        mentor = new User();
+        mentor.setRole(Role.ADMIN);
+        mentor.setStatus(Status.ACTIVE);
+        mentor.setUsername("samolot");
+        mentor.setEmail("xd@xd.com");
+        mentor.setName("Fiat");
+        mentor.setLastname("Punto");
+        mentor.setPassword(passwordEncoder.encode("samolot"));
+        userRepository.save(mentor);
 
     }
 }

@@ -65,6 +65,7 @@ public class OrderService {
         order.setRestaurant(newOrderRequest.getRestaurant());
         order.setCollectingPlace(newOrderRequest.getCollectingPlace());
         order.setOrderStatus(OrderStatus.OPEN);
+        order.setCoupon(newOrderRequest.getCoupon());
         User user = userService.authenticateUser();
 //        User user=userRepository.getUserByUsername("admin")
 //                .orElseThrow(() -> new UserNotFoundException());
@@ -100,10 +101,25 @@ public class OrderService {
         return orderRepository.getOne(orderId);
     }
 
-    public void joinToOrder(Long orderId, String menuPositions,Double price) {
+    public void joinToOrder(Long orderId) {
         Order order = orderRepository.getOne(orderId);
         User user = userService.authenticateUser();
         order.addUser(user);
         orderRepository.save(order);
+    }
+    public Boolean takeOverOrder(Long orderID){
+        Order order= orderRepository.getOne(orderID);
+        if(!order.getCoupon()){
+            User owner=order.getOrderingUser();
+            User user = userService.authenticateUser();
+//            User user=userRepository.getUserByUsername("samolot")
+//                    .orElseThrow(() -> new UserNotFoundException());
+            order.addUser(owner);
+            order.setCoupon(true);
+            order.setOrderingUser(user);
+            orderRepository.save(order);
+            return true;
+        }
+        return false;
     }
 }

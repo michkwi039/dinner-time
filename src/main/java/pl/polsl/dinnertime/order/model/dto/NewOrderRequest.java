@@ -13,15 +13,17 @@ public class NewOrderRequest {
     private String collectingPlace;
     private String menuPositions;
     private Double price;
+    private Boolean coupon=false;
 
     public NewOrderRequest() {
     }
 
-    public NewOrderRequest(String restaurant, ZonedDateTime time, String collectingPlace,String menuPositions, Double price) {
+    public NewOrderRequest(String restaurant, ZonedDateTime time, String collectingPlace,String menuPositions, Double price,Boolean coupon) {
         this.restaurant = restaurant;
         this.time = time;
         this.collectingPlace = collectingPlace;
         this.menuPositions=menuPositions;
         this.price=price;
+        this.coupon=coupon;
     }
 }
