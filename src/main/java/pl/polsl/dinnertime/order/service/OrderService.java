@@ -1,8 +1,6 @@
 package pl.polsl.dinnertime.order.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import pl.polsl.dinnertime.exceptions.UserNotFoundException;
 import pl.polsl.dinnertime.order.model.dto.NewOrderRequest;
 import pl.polsl.dinnertime.order.model.dto.OrderInfo;
 import pl.polsl.dinnertime.order.model.entity.Order;
@@ -11,12 +9,10 @@ import pl.polsl.dinnertime.order.model.entity.OrderStatus;
 import pl.polsl.dinnertime.orderRecord.model.dto.OrderRecordRequest;
 import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecord;
 import pl.polsl.dinnertime.orderRecord.model.entity.OrderRecordRepository;
-import pl.polsl.dinnertime.orderRecord.service.OrderRecordService;
 import pl.polsl.dinnertime.user.model.entity.User;
 import pl.polsl.dinnertime.user.model.entity.UserRepository;
 import pl.polsl.dinnertime.user.service.UserService;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
