@@ -13,8 +13,10 @@ import pl.polsl.dinnertime.user.service.OnRegistrationCompleteEvent;
 import pl.polsl.dinnertime.user.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.util.List;
+
 
 @RestController
 public class UserController {
@@ -25,6 +27,15 @@ public class UserController {
     public UserController(UserService userService, ApplicationEventPublisher applicationEventPublisher) {
         this.userService = userService;
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @RequestMapping(method = RequestMethod.OPTIONS, value = "/login")
+    public void login(HttpServletRequest request, HttpServletResponse response) {
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+//       if(CorsUtils.isPreFlightRequest(request)) {
+//           response.setStatus(HttpServletResponse.SC_OK);
+//       }
+//        return ResponseEntity.ok("ok");
     }
 
     @GetMapping("user")
