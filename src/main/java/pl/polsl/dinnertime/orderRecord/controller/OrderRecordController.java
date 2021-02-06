@@ -11,6 +11,7 @@ import pl.polsl.dinnertime.orderRecord.service.OrderRecordService;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class OrderRecordController {
 
     private final OrderRecordService orderRecordService;

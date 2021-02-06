@@ -35,6 +35,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
         if(CorsUtils.isCorsRequest(request)){
             response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Methods", "*");
         }
 
         try {
@@ -61,7 +62,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .signWith(secretKey)
                 .compact();
 
-//        response.addHeader("Access-Control-Expose-Headers", "Authorization");
+        response.addHeader("Access-Control-Expose-Headers", "Authorization");
 
         response.addHeader(jwtConfiguration.getAuthorizationHeader(), jwtConfiguration.getTokenPrefix() + token);
     }
